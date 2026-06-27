@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📋 Job Application Tracker</h1>
+    
+    <div class="profile-card">
+
+    <h3>👤 Constance</h3>
+
+    <p id="profileApplications">
+        Applications: 0
+    </p>
+
+    <p id="profileInterviews">
+        Interviews: 0
+    </p>
+
+</div>
+
+    <button id="darkModeBtn">
+    🌙 Dark Mode
+</button>
+
+<select id="themeSelector">
+    <option value="blue">Blue Theme</option>
+    <option value="green">green Theme</option>
+    <option value="red">Red Theme</option>
+    <option value="pink">pink Theme</option>
+</select>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h2 id="totalJobs">0</h2>
+            <p>Total Applications</p>
+        </div>
+
+        <div class="card">
+            <h2 id="interviews">0</h2>
+            <p>Interviews</p>
+        </div>
+
+        <div class="card">
+            <h2 id="offers">0</h2>
+            <p>Offers</p>
+        </div>
+
+        <div class="card">
+            <h2 id="rejections">0</h2>
+            <p>Rejected</p>
+        </div>
+
+        <div class="card">
+    <h2 id="successRate">0%</h2>
+    <p>Success Rate</p>
+</div>
+
+    </div>
+
+   <div class="application-form">
+
+    <input
+        type="text"
+        id="company"
+        placeholder="Company Name"
+    >
+
+    <input
+        type="text"
+        id="role"
+        placeholder="Job Role"
+    >
+
+    <input 
+    type="date" 
+    id="dateApplied"
+    >
+
+    
+
+    <select id="status">
+
+        <option>Applied</option>
+
+        <option>Interview</option>
+
+        <option>Offer</option>
+
+        <option>Rejected</option>
+
+    </select>
+
+    <!-- NEW -->
+
+    <input
+        type="text"
+        id="location"
+        placeholder="Location (Cape Town, Remote...)"
+    >
+
+    <select id="employmentType">
+
+        <option value="">Employment Type</option>
+
+        <option>Full-Time</option>
+
+        <option>Part-Time</option>
+
+        <option>Internship</option>
+
+        <option>Contract</option>
+
+     
+
+    </select>
+
+    <input
+        type="date"
+        id="interviewDate"
+    >
+
+    
+
+    <input
+        type="url"
+        id="jobLink"
+        placeholder="Paste Job Link"
+    >
+
+    <textarea
+        id="notes"
+        placeholder="Recruiter, Google Meet, extra notes..."
+    ></textarea>
+
+    <button id="addBtn"  onclick="addJob()">
+
+        Add Application
+
+    </button>
+
+</div>
+
+<section class="statistics-section">
+
+    <h2>Application Statistics</h2>
+
+    <div class="charts-container">
+
+        <div class="chart-card">
+            <h3>Applications by Status</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Applications Per Month</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Interview vs Rejections</h3>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Most Applied Companies</h3>
+            <canvas id="companyChart"></canvas>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="filters">
+    <input type="text" id="searchInput"  placeholder="Search company or role....">
+    </div>
+
+<select id="filterStatus">
+
+    <option value="All">
+        All
+    </option>
+
+    <option value="Applied">
+        Applied
+    </option>
+
+    <option value="Interview">
+        Interview
+    </option>
+
+    <option value="Offer">
+        Offer
+    </option>
+
+    <option value="Rejected">
+        Rejected
+    </option>
+
+</select>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Date Applied</th>
+                <th>Company</th>
+                <th>role</th>
+                <th>Status</th>
+                 <th>Location / Type</th>
+                <th>Notes</th>
+                 <th>Actions</th>
+                <th><a href="${job.jobLink}" target="_blank">🔗View</a></th>
+                
+            </tr>
+                  
+        </thead>
+
+        <tbody id="jobList"></tbody>
+      
+
+    </table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
