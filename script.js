@@ -107,6 +107,47 @@ function showArray() {
         JSON.stringify(jobs, null, 2);
 }
 
+// Create table. Displayed in the Applications tab.
+function createTable() {
+    const content = document.querySelector(".content");
+
+    if (jobs.length === 0) {
+        content.innerHTML = "<p>No data available</p>";
+        return;
+    }
+
+    let tableHTML = `
+        <table border="1" cellpadding="10" cellspacing="0">
+            <tr>
+                <th>Company</th>
+                <th>Job Title</th>
+                <th>Status</th>
+                <th>Date Applied</th>
+                <th>Location</th>
+                <th>Employment Type</th>
+                <th>Interview Date</th>
+            </tr>
+    `;
+
+    jobs.forEach(job => {
+        tableHTML += `
+            <tr>
+                <td>${job.company}</td>
+                <td>${job.jobTitle}</td>
+                <td>${job.status}</td>
+                <td>${job.dateApplied}</td>
+                <td>${job.location}</td>
+                <td>${job.employmentType}</td>
+                <td>${job.interviewDate}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += "</table>";
+
+    content.innerHTML = tableHTML;
+}
+
 // EVENT LISTENER
 
 addBtn.addEventListener("click", addJob);
