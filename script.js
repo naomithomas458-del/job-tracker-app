@@ -25,6 +25,87 @@ let editingJobId = null;
 // ARRAY
 
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+//let dataArray = [];
+
+// CREATE DYNAMIC FORM AND VALIDATE
+function createForm() {
+    const container = document.getElementById("formContainer");
+
+    // Prevent duplicate form creation
+    if (document.getElementById("dynamicForm")) return;
+
+    const form = document.createElement("div");
+    form.className = "form-box";
+    form.id = "dynamicForm";
+
+    form.innerHTML = `
+        <h3>Dynamic Form</h3>
+        <input type="text" id="company" placeholder="Enter company name">
+        <input type="text" id="jobTitle" placeholder="Enter job title">
+        <input type="date" id="dateApplied" placeholder="Enter date applied">
+
+        <select id="status">
+            <option value="">Select Status</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+
+        <input type="text" id="location" placeholder="Location (Cape Town, Remote...)">
+
+        <select id="employmentType">
+            <option value="">Employment Type</option>
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Internship">Internship</option>
+            <option value="Contract">Contract</option>
+        </select>
+
+        <input type="date" id="interviewDate" placeholder="Interview Date (if applicable)">
+    
+        <button onclick="submitForm()">Submit</button>
+    `;
+
+    container.appendChild(form);
+}
+
+function submitForm() {
+    const company = document.getElementById("company").value;
+    const jobTitle = document.getElementById("jobTitle").value;
+    const dateApplied = document.getElementById("dateApplied").value;
+    const status = document.getElementById("status").value;
+    const location = document.getElementById("location").value;
+    const employmentType = document.getElementById("employmentType").value;
+    const interviewDate = document.getElementById("interviewDate").value;
+
+
+    if (!company || !jobTitle || !dateApplied || !status || !location || !employmentType || !interviewDate) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    // Push to array
+    jobs.push({
+        company: company,
+        jobTitle: jobTitle,
+        dateApplied: dateApplied,
+        status: status,
+        location: location,
+        employmentType: employmentType,
+        interviewDate: interviewDate
+    });
+
+    alert("Job added!");
+
+    // 🔥 REMOVE the form completely
+    document.getElementById("dynamicForm").remove();
+}
+
+function showArray() {
+    document.getElementById("output").textContent =
+        JSON.stringify(jobs, null, 2);
+}
 
 // EVENT LISTENER
 
@@ -78,7 +159,11 @@ function addJob() {
 
     if(company === "" ||
          role === "" ||
-         dateInput.value ===""
+         dateInput.value ==="" ||
+         status === "" ||
+         location === "" ||
+         employmentType === "" ||
+         interviewDate === ""
       ) {
         alert("Please fill in all fields");
         return;

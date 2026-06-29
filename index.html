@@ -9,125 +9,113 @@
 <body>
 
 <div class="container">
+<!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h3>📋 Job Application Tracker</h3>
+        <ul>
+            <li><a href="#">🏠 Home</a></li>
+            <li><a href="#">📄 Applications</a></li>
+            <li><a href="#">✉️ Calender</a></li>
+            <li><a href="#">✉️ Statistics</a></li>
+            <li><a href="#">✉️ Reminders</a></li>
+            <li><a href="#">✉️ Documents</a></li>
+            <li><a href="#">⚙️ Settings</a></li>
+        </ul>
+        
+        <div class="profile-card">
+            <h3>👤 Constance</h3>
+            <p id="profileApplications">Applications: 0</p>
+            <p id="profileInterviews">Interviews: 0</p>
+        </div>    
 
-    <h1>📋 Job Application Tracker</h1>
-    
-    <div class="profile-card">
+        <button id="darkModeBtn">🌙 Dark Mode</button>
 
-    <h3>👤 Constance</h3>
-
-    <p id="profileApplications">
-        Applications: 0
-    </p>
-
-    <p id="profileInterviews">
-        Interviews: 0
-    </p>
-
-</div>
-
-    <button id="darkModeBtn">
-    🌙 Dark Mode
-</button>
-
-<select id="themeSelector">
-    <option value="blue">Blue Theme</option>
-    <option value="green">green Theme</option>
-    <option value="red">Red Theme</option>
-    <option value="pink">pink Theme</option>
-</select>
-
-    <div class="dashboard">
-
-        <div class="card">
-            <h2 id="totalJobs">0</h2>
-            <p>Total Applications</p>
-        </div>
-
-        <div class="card">
-            <h2 id="interviews">0</h2>
-            <p>Interviews</p>
-        </div>
-
-        <div class="card">
-            <h2 id="offers">0</h2>
-            <p>Offers</p>
-        </div>
-
-        <div class="card">
-            <h2 id="rejections">0</h2>
-            <p>Rejected</p>
-        </div>
-
-        <div class="card">
-    <h2 id="successRate">0%</h2>
-    <p>Success Rate</p>
-</div>
-
+        <select id="themeSelector">
+            <option value="blue">Blue Theme</option>
+            <option value="green">green Theme</option>
+            <option value="red">Red Theme</option>
+            <option value="pink">pink Theme</option>
+        </select>
     </div>
 
-   <div class="application-form">
+    <!-- Content -->
+    <div class="content">
+        <div class="header">
+            <h2>Dashboard</h2>
+            <p>Track your job applications, interviews, and offers in one place.</p>
+            <button id="addBtn" onclick="createForm()">Add Application</button>
+        </div>
 
-    <input
-        type="text"
-        id="company"
-        placeholder="Company Name"
-    >
+        <button onclick="showArray()">Show Array</button>
 
-    <input
-        type="text"
-        id="role"
-        placeholder="Job Role"
-    >
+        <div id="formContainer"></div>
 
-    <input 
-    type="date" 
-    id="dateApplied"
-    >
+        <pre id="output"></pre>
 
+        <div class="dashboard">
+            <div class="card">
+                <h2 id="totalJobs">0</h2>
+                <p>Total Applications</p>
+            </div>
+
+            <div class="card">
+                <h2 id="interviews">0</h2>
+                <p>Interviews</p>
+            </div>
+
+            <div class="card">
+                <h2 id="offers">0</h2>
+                <p>Offers</p>
+            </div>
+
+            <div class="card">
+                <h2 id="rejections">0</h2>
+                <p>Rejected</p>
+            </div>
+
+            <div class="card">
+                <h2 id="successRate">0%</h2>
+                <p>Success Rate</p>
+            </div>
+        </div>
+    </div>
     
+    <!-- Statistics -->
+    <div class="statistics-section">
+        <h2>Application Statistics</h2>
 
-    <select id="status">
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Applications by Status</h3>
+                <canvas id="statusChart"></canvas>
+            </div>
 
-        <option>Applied</option>
+            <div class="chart-card">
+                <h3>Applications Per Month</h3>
+                <canvas id="monthlyChart"></canvas>
+            </div>
 
-        <option>Interview</option>
+            <div class="chart-card">
+                <h3>Interview vs Rejections</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
 
-        <option>Offer</option>
+            <div class="chart-card">
+                <h3>Most Applied Companies</h3>
+                <canvas id="companyChart"></canvas>
+            </div>
+        </div>
+    </div>
 
-        <option>Rejected</option>
+    <div id="formContainer"></div>
 
-    </select>
+    <div class="content">
+        <!-- Table will appear here -->
+    </div>
+</div>
 
-    <!-- NEW -->
-
-    <input
-        type="text"
-        id="location"
-        placeholder="Location (Cape Town, Remote...)"
-    >
-
-    <select id="employmentType">
-
-        <option value="">Employment Type</option>
-
-        <option>Full-Time</option>
-
-        <option>Part-Time</option>
-
-        <option>Internship</option>
-
-        <option>Contract</option>
-
-     
-
-    </select>
-
-    <input
-        type="date"
-        id="interviewDate"
-    >
-
+<!--
+<div class="application-form">
     
 
     <input
@@ -141,43 +129,10 @@
         placeholder="Recruiter, Google Meet, extra notes..."
     ></textarea>
 
-    <button id="addBtn"  onclick="addJob()">
-
-        Add Application
-
-    </button>
+    
 
 </div>
-
-<section class="statistics-section">
-
-    <h2>Application Statistics</h2>
-
-    <div class="charts-container">
-
-        <div class="chart-card">
-            <h3>Applications by Status</h3>
-            <canvas id="statusChart"></canvas>
-        </div>
-
-        <div class="chart-card">
-            <h3>Applications Per Month</h3>
-            <canvas id="monthlyChart"></canvas>
-        </div>
-
-        <div class="chart-card">
-            <h3>Interview vs Rejections</h3>
-            <canvas id="lineChart"></canvas>
-        </div>
-
-        <div class="chart-card">
-            <h3>Most Applied Companies</h3>
-            <canvas id="companyChart"></canvas>
-        </div>
-
-    </div>
-
-</section>
+-->
 
 <div class="filters">
     <input type="text" id="searchInput"  placeholder="Search company or role....">
@@ -230,6 +185,7 @@
     </table>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>
