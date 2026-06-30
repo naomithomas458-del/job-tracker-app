@@ -15,10 +15,14 @@ const themeSelector = document.getElementById("themeSelector");
 const locationInput = document.getElementById("location");
 const jobLinkInput = document.getElementById("jobLink");
 const addButton = document.getElementById("addButton");
+const scheduleBtn = document.getElementById("scheduleBtn");
+
 
 let statusChart;
 let monthlyChart;
 let editingJobId = null;
+
+
 
 
 
@@ -78,29 +82,68 @@ function submitForm() {
     const location = document.getElementById("location").value;
     const employmentType = document.getElementById("employmentType").value;
     const interviewDate = document.getElementById("interviewDate").value;
-
+    const isEdit = editingJobId !== null;
 
     if (!company || !jobTitle || !dateApplied || !status || !location || !employmentType || !interviewDate) {
         alert("Please fill in all fields");
         return;
     }
+//edit mode
+if(editingJobId !== null) {
 
-    // Push to array
-    jobs.push({
+    jobs = jobs.map(job => {
+        if(job.id === editingJobId) {
+            return {
+                ...job,
+                company:company,
+                role:jobTitle,
+                date:dateApplied,
+                status:status,
+                loaction:location,
+                employmentType:employmentType,
+                interviewDate:interviewDate
+
+            };
+        }
+        return jobs;
+    });
+    editingJobId = null;
+}
+
+// add mode 
+else{ 
+     jobs.push({
+        id:Date.now(),
         company: company,
-        jobTitle: jobTitle,
-        dateApplied: dateApplied,
+        role: jobTitle,
+        date: dateApplied,
         status: status,
         location: location,
         employmentType: employmentType,
-        interviewDate: interviewDate
+        interviewDate: interviewDate,
+        notes:""
     });
+}
+   
+saveJobs();
 
-    alert("Job added!");
+//update Ui
+displayJobs();
+updateDashboard();
+createStatusChart();
+createMonthlyChart();
+createRejectionInterviewChart();
+
+    alert(editingJobId ? "Job added!" : "Job added!");
 
     // 🔥 REMOVE the form completely
     document.getElementById("dynamicForm").remove();
+
+    editingJobId = null;
 }
+
+
+
 
 function showArray() {
     document.getElementById("output").textContent =
@@ -148,31 +191,26 @@ function createTable() {
     content.innerHTML = tableHTML;
 }
 
-// EVENT LISTENER
 
-addBtn.addEventListener("click", addJob);
 
-searchInput.addEventListener("input",handleSearchAndFilter);
 
+if(searchInput) {
+    searchInput.addEventListener("input",handleSearchAndFilter);
+}
+
+if(filterStatus){
 filterStatus.addEventListener("change",handleSearchAndFilter);
+}
+
 
 darkModeBtn.addEventListener("click",() => {
         document.body.classList.toggle(
             "dark-mode");
     });
 
-themeSelector.addEventListener("change", () => {
+    scheduleBtn.addEventListener("click", addReminder);
 
-    document.body.classList.remove(
-        "theme-blue",
-        "theme-green",
-        "theme-purple"
-    );
 
-    document.body.classList.add(
-        `theme-${themeSelector.value}`
-    );
-});
 
 // DISPLAY SAVED JOBS
 
@@ -183,59 +221,7 @@ createMonthlyChart();
 
 // ADD JOB
 
-function addJob() {
 
-    const company = companyInput.value.trim();
-    const role = roleInput.value.trim();
-    const status = statusInput.value;
-    const date = dateInput.value;
-    const notes = notesInput.value.trim();
-
-    const location = document.getElementById("location").value.trim();
-    const employmentType = document.getElementById("employmentType").value;
-    const interviewDate = document.getElementById("interviewDate").value;
-    const jobLink = document.getElementById("jobLink").value.trim();
-
-  // CONDITIONAL STATEMENT
-
-    if(company === "" ||
-         role === "" ||
-         dateInput.value ==="" ||
-         status === "" ||
-         location === "" ||
-         employmentType === "" ||
-         interviewDate === ""
-      ) {
-        alert("Please fill in all fields");
-        return;
-    }
-
-    // OBJECT
-
-    const newJob = {
-        id: Date.now(),
-        company,
-        role,
-        status,
-        date,
-        location,
-        employmentType,
-        interviewDate,
-        jobLink,
-        notes
-    };
-
-    jobs.push(newJob);
-
-    saveJobs();
-    displayJobs();
-    updateDashboard();
-
-    companyInput.value = "";
-    roleInput.value = "";
-    dateInput.value ="";
-    notesInput.value ="";
-}
 
 // DISPLAY JOBS
 
@@ -279,8 +265,11 @@ function displayFilteredJobs(filteredJobs) {
             <td>${job.notes || ""}</td>
     <td>
     <div class="action-buttons">
+   
         <button class="update-btn" onclick="updateJob(${job.id})">Update</button>
+
         <button class="delete-btn" onclick="deleteJob(${job.id})">Delete</button>
+        
     </div>
 </td>
 <td><a href="${job.jobLink}" target="_blank">🔗View</a></td>
@@ -298,21 +287,23 @@ function updateJob(id) {
 
     const job = jobs.find(job => job.id === id);
 
-    companyInput.value = job.company;
-    roleInput.value = job.role;
-    statusInput.value = job.status;
-    dateInput.value = job.date;
+    if(!job) return;
 
-    document.getElementById("location").value = job.location;
-    document.getElementById("employmentType").value = job.employmentType;
-    document.getElementById("interviewDate").value = job.interviewDate;
-    document.getElementById("jobLink").value = job.jobLink;
-
-    notesInput.value = job.notes;
+    document.getElementById("company").value = job.company || "";
+    document.getElementById("jobTitle").value = job.role|| "";
+    document.getElementById("status").value = job.status || "";
+    document.getElementById("dateApplied").value = job.date || "";
+    document.getElementById("location").value = job.location || "";
+    document.getElementById("employment").value = job.employmentType || "";
+    document.getElementById("interviewDate").value = job.interviewDate || "";
+    document.getElementById("jobLink").value = job.jobLink || "";
+    document.getElementById("notes").value = job.notes || "";
 
     editingJobId = id;
 
-    addButton.textContent = "Save Changes";
+    const btn = document.getElementById("addBtn");
+    if(btn) btn.textContent = "Save Changes";
+    
 }
 
 // DELETE JOB
@@ -324,6 +315,7 @@ function deleteJob(id){
     saveJobs();
 
    handleSearchAndFilter();
+   createRejectionInterviewChart();
 }
 
 // SAVE TO LOCAL STORAGE
@@ -372,43 +364,62 @@ function updateDashboard() {
 }
 
 // search
-function searchJobs() {
+function searchJobs(lists) {
 
     const searchTerm =
     searchInput.value.trim().toLowerCase();
 
-     return  jobs.filter(job =>
-        job.company.toLowerCase().includes(searchTerm) ||
-        job.role.toLowerCase().includes(searchTerm) ||
-        job.status.toLowerCase().includes(searchTerm) ||
-        job.location.toLowerCase().includes(searchTerm) ||
-        job.employmentType.toLowerCase().includes(searchTerm) ||
-        job.notes.toLowerCase().includes(searchTerm)
+     return  jobs.filter(job => {
+        return ( 
+            (job.company || "").toLowerCase().includes(searchTerm) ||
+        (job.role || job.jobTitle || "").toLowerCase().includes(searchTerm) ||
+        (job.status || "").toLowerCase().includes(searchTerm) ||
+        (job.location ||"").toLowerCase().includes(searchTerm) ||
+        (job.employmentType || "").toLowerCase().includes(searchTerm) ||
+        (job.notes || "").toLowerCase().includes(searchTerm)
     );
+      });
+ }
+        
 
-    displayFilteredJobs(filteredJobs);
-}
+  
 
 // Filter
-function filterJobs(jobList) {
+function filterJobs(jobArray) {
 
-     const selectedStatus = document.getElementById("filterStatus").value;
-     const selectedEmployment = document.getElementById("employment").value;
-
-     const filtered = jobs.filter(job => {
-        return(selectedStatus === "All" || job.status == selectedStatus) &&
-               (selectedEmployment == "All" || job.employmentType == selectedEmployment);
-     });
-          displayFilteredJobs(filtered);
+    const selectedStatus = filterStatus.value;
     
+    if(selectedStatus == "All") {
+        return jobArray;
     }
+    return jobArray.filter(job => job.status == selectedStatus);
+}
 
     function handleSearchAndFilter(){
-        const searchResults = searchJobs();
-        const finalResults = filterJobs(searchResults);
 
-        displayFilteredJobs(finalResults);
+        let filteredJobs = jobs;
+
+        //search
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        if(searchTerm !== "") {
+
+            filteredJobs = filterJobs.filter(job => 
+            (job.company || "").toLowerCase().includes(searchTerm) ||
+            (job.role || "").toLowerCase().includes(searchTerm)
+            );
+        }
+        //status filter
+        const selectedStatus = filterStatus.value;
+
+        if(selectedStatus !== "All") {
+            filteredJobs = filteredJobs.filter(job => 
+                job.status == selectedStatus
+            );
+        }
+        displayFilteredJobs(filteredJobs);
     }
+ 
     
 // CHART
 
@@ -485,10 +496,10 @@ statusChart = new Chart(ctx, {
 
     jobs.forEach(job => {
 
-        if (!job.dateApplied) return;
+        if (!job.date) return;
 
         // Convert "2026-06-15" into "Jun 2026"
-        const date = new Date(job.dateApplied);
+        const date = new Date(job.date);
 
         const month = date.toLocaleString("default", {
             month: "short",
@@ -560,4 +571,87 @@ statusChart = new Chart(ctx, {
     });
 
 }
+
+function renderRejectionChart(data) {
+
+    const ctx = document.getElementById("rejectionChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: data.map(d => d.name),
+            datasets: [{
+                data: data.map(d => d.value),
+                backgroundColor: ["red", "green"]
+            }]
+        }
+    });
+}
+
+let reminder = JSON.parse(localStorage.getItem("reminder")) || [];
+
+function addReminder() {
+
+    const company = document.getElementById("interviewCompany").value;
+    const date = document.getElementById("interviewDate").value;
+    const time = document.getElementById("interviewTime").value;
+
+    if(!company || !date || !time) {
+        alert("Please complete all feilds.");
+    }
+
+    reminder.push({
+        company,
+        date,time
+    });
+
+    localStorage.setItem("reminder", JSON.stringify(reminder));
+
+    displayReminder();
+}
+
+function displayReminder() {
+
+    const reminderList = document.getElementById("reminderList");
+
+    reminderList.innerHTML = "";
+
+    reminder.forEach((item,index)=> {
+
+        reminderList.innerHTML += `
+
+        <div class="reminder-card">
+        
+        <h4>${item.company}</h4>
+
+       <p>${item.date}</p>
+
+       <p>${item.time}</p>
+        
+        <button onclick="deleteReminder(${index})">
+
+        Delete
+
+        </button>
+       
+        </div>
+        `;
+          
+    });
+}
+
+function deleteReminder(index){
+
+    reminder.splice(index, 1);
+
+    localStorage.setItem("reminder", JSON.stringify(reminder));
+
+    displayReminder();
+}
+
+
+
+
+
+
 

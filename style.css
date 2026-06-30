@@ -20,6 +20,8 @@ body{
     position: fixed;
     left: 0;
     top: 0;
+    width:250px;
+    height:100vh;
 }
 
 .sidebar h3 {
@@ -29,21 +31,26 @@ body{
 .sidebar ul {
     list-style: none;
     padding: 0;
+    background:white;
 }
 
 .sidebar ul li a {
     display: block;
     padding: 12px 20px;
     text-decoration: none;
+    transition: 0.3s;
+    cursor:pointer;
 }
 
 .sidebar ul li a:hover {
-    background: #575757;
+    background: #2563eb;
+    color: white;
 }
 
  /* Main Content */
 .content {
-    margin-left: 250px;
+    margin-left: 280px;
+    padding: 20px;
 }
 
 /* Mobile */
@@ -261,3 +268,14 @@ td{
 .delete-btn{
     width:80px;
 }
+
+.page-section{
+    display:none;
+}
+
+.page-section.active{
+    display:block;
+}
+
+
+
